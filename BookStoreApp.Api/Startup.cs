@@ -1,7 +1,9 @@
+using BookStoreApp.Api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -26,6 +28,9 @@ namespace BookStoreApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            //
+            var connString = ConfigurationExtensions.GetConnectionString(this.Configuration, "BookStoreAppDbConnection");
+            services.AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(connString));
             // using CORS Policy
             services.AddCors(options => {
                 options.AddPolicy("AllowAll", b => b.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
