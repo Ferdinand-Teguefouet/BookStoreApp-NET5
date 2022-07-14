@@ -1,3 +1,4 @@
+using BookStoreApp.Api.Configurations;
 using BookStoreApp.Api.Data;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -35,6 +36,9 @@ namespace BookStoreApp.Api
             services.AddCors(options => {
                 options.AddPolicy("AllowAll", b => b.AllowAnyMethod().AllowAnyHeader().AllowAnyOrigin());
             });
+
+            services.AddAutoMapper(typeof(MapperConfig));
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
