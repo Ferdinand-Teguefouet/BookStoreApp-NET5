@@ -9,11 +9,14 @@ using BookStoreApp.Api.Data;
 using AutoMapper;
 using BookStoreApp.Api.Models.Book;
 using AutoMapper.QueryableExtensions;
+using Microsoft.AspNetCore.Authorization;
 
 namespace BookStoreApp.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
+    //[AllowAnonymous]
     public class BooksController : ControllerBase
     {
         private readonly BookStoreDbContext _context;
@@ -57,6 +60,7 @@ namespace BookStoreApp.Api.Controllers
         // PUT: api/Books/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> PutBook(int id, BookUpdateDto bookDto)
         {
             if (id != bookDto.Id)
@@ -95,13 +99,15 @@ namespace BookStoreApp.Api.Controllers
         // POST: api/Books
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
+        [Authorize(Roles = "Administrator")]
         public async Task<ActionResult<BookCreateDto>> PostBook(BookCreateDto bookDto)
         {
             var book = _mapper.Map<Book>(bookDto);
             try
-            {                
-                _context.Books.Add(book);
+            {
+                await _context.Books.AddAsync(book);
                 await _context.SaveChangesAsync();
+                return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
             }
             catch (DbUpdateException)
             {
@@ -114,12 +120,11 @@ namespace BookStoreApp.Api.Controllers
                     throw;
                 }
             }
-
-            return CreatedAtAction(nameof(GetBook), new { id = book.Id }, book);
         }
 
         // DELETE: api/Books/5
         [HttpDelete("{id}")]
+        [Authorize(Roles = "Administrator")]
         public async Task<IActionResult> DeleteBook(int id)
         {
             var book = await _context.Books.FindAsync(id);

@@ -2,6 +2,7 @@
 using BookStoreApp.Api.Data;
 using BookStoreApp.Api.Models.Author;
 using BookStoreApp.Api.Models.Book;
+using BookStoreApp.Api.Models.User;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,8 +20,8 @@ namespace BookStoreApp.Api.Configurations
             CreateMap<AuthorReadOnlyDto, Author>().ReverseMap();
 
             // Books mapping
-            CreateMap<AuthorCreateDto, Book>().ReverseMap();
-            CreateMap<AuthorUpdateDto, Book>().ReverseMap();
+            CreateMap<BookCreateDto, Book>().ReverseMap();
+            CreateMap<BookUpdateDto, Book>().ReverseMap();
             CreateMap<Book, BookReadOnlyDto>()
                 .ForMember(m => m.AuthorName, n => n.MapFrom(map => $"{map.Author.FirstName} {map.Author.LastName}"))
                 .ReverseMap();
@@ -28,6 +29,9 @@ namespace BookStoreApp.Api.Configurations
             CreateMap<Book, BookDetailsDto>()
                 .ForMember(m => m.AuthorName, n => n.MapFrom(map => $"{map.Author.FirstName} {map.Author.LastName}"))
                 .ReverseMap();
+
+            // ApiUser mapping
+            CreateMap<ApiUser, UserDto>().ReverseMap();
         }
     }
 }
