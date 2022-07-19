@@ -1,0 +1,50 @@
+﻿@page "/books/details/{id:int}"
+@inherits DetailsBase
+
+<h3>Book Details</h3>
+
+<EditForm Model="Book">
+    <fieldset disabled>
+        <div class="form-group">
+            <label for="image">Book Cover Photo</label>
+            <div>
+                <img src="@Book.Image" width="100" height="100" class="img-thumbnail" />
+            </div>
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="title">Book Title</label>
+            <InputText class="form-control" @bind-Value="Book.Title" id="title" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="author">Author</label>
+            <InputText class="form-control" @bind-Value="Book.AuthorName" id="author" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="isbn">ISBN</label>
+            <InputText class="form-control" @bind-Value="Book.Isbn" id="isbn" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="price">Price</label>
+            <InputNumber class="form-control" @bind-Value="Book.Price" id="price" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="year">Year</label>
+            <InputNumber class="form-control" @bind-Value="Book.Year" id="year" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="summary">Summary</label>
+            <InputText class="form-control" @bind-Value="Book.Summary" id="summary" />
+        </div>
+        <br />
+    </fieldset>
+    <br />
+    
+    <button @onclick="GoToEdit" class="btn btn-warning"><span class="oi oi-plus"></span> Edit Book</button>
+    <button @onclick="BackToList" class="btn btn-outline-secondary"><span class="oi oi-media-skip-backward"></span> Back to List</button>
+</EditForm>

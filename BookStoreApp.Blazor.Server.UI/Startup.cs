@@ -44,6 +44,7 @@ namespace BookStoreApp.Blazor.Server.UI
             services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:44396"));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAuthorService, AuthorService>();
+            services.AddScoped<IBookService, BookService>();
 
 
             // Auto Mapper Configurations

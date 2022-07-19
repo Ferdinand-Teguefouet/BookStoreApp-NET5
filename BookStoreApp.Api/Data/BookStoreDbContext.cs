@@ -52,7 +52,7 @@ namespace BookStoreApp.Api.Data
 
                 //entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.Image).HasMaxLength(50);
+                entity.Property(e => e.Image).HasMaxLength(250);
 
                 entity.Property(e => e.Isbn)
                     .IsRequired()

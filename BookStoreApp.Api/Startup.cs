@@ -86,6 +86,7 @@ namespace BookStoreApp.Api
 
 
             app.UseHttpsRedirection();
+            app.UseStaticFiles();
 
             app.UseCors("AllowAll"); // To use cors
 

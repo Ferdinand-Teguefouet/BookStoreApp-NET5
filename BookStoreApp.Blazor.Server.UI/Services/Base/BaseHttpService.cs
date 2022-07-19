@@ -41,7 +41,7 @@ namespace BookStoreApp.Blazor.Server.UI.Services.Base
         // Add the token
         protected async Task GetBearerToken()
         {
-            //var token = await _localStorageService.GetItemAsStringAsync("accessToken"); ça marche aussi
+            //var token = await _localStorageService.GetItemAsStringAsync("accessToken"); //ça marche aussi
             var token = await _localStorageService.GetItemAsync<string>("accessToken"); // ça marche aussi
             if (token != null)
             {
