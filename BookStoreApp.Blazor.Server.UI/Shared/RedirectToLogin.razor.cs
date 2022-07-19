@@ -8,10 +8,10 @@ namespace BookStoreApp.Blazor.Server.UI.Shared
 {
     public class RedirectToLoginBase : ComponentBase
     {
-        protected NavigationManager Navigation { get; set; }
+        private readonly NavigationManager Navigation;
         protected override void OnInitialized()
         {
-            Navigation.NavigateTo("/users/login");
+            Navigation.NavigateTo("users/login");
         }
     }
 }

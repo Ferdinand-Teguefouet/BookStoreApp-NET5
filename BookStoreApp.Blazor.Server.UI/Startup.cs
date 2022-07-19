@@ -1,6 +1,9 @@
+using AutoMapper;
 using Blazored.LocalStorage;
+using BookStoreApp.Blazor.Server.UI.Configurations;
 using BookStoreApp.Blazor.Server.UI.Data;
 using BookStoreApp.Blazor.Server.UI.Providers;
+using BookStoreApp.Blazor.Server.UI.Services;
 using BookStoreApp.Blazor.Server.UI.Services.Authentication;
 using BookStoreApp.Blazor.Server.UI.Services.Base;
 using Microsoft.AspNetCore.Builder;
@@ -40,6 +43,20 @@ namespace BookStoreApp.Blazor.Server.UI
             //
             services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:44396"));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IAuthorService, AuthorService>();
+
+
+            // Auto Mapper Configurations
+            //services.AddAutoMapper(typeof(MapperConfig)); // works with .net 6
+
+            var mapperConfig = new MapperConfiguration(mc =>
+            {
+                mc.AddProfile(new MapperConfig());
+            });
+
+            IMapper mapper = mapperConfig.CreateMapper();
+            services.AddSingleton(mapper);
+
             services.AddScoped<ApiAuthenticationStateProvider>();
             services.AddScoped<AuthenticationStateProvider>(p => p.GetRequiredService<ApiAuthenticationStateProvider>());
         }

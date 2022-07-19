@@ -11,6 +11,7 @@ using AutoMapper;
 using Microsoft.Extensions.Logging;
 using BookStoreApp.Api.Static;
 using Microsoft.AspNetCore.Authorization;
+using AutoMapper.QueryableExtensions;
 
 namespace BookStoreApp.Api.Controllers
 {
@@ -51,20 +52,23 @@ namespace BookStoreApp.Api.Controllers
 
         // GET: api/Authors/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<AuthorReadOnlyDto>> GetAuthor(int id)
+        public async Task<ActionResult<AuthorDetailsDto>> GetAuthor(int id)
         {
             _logger.LogInformation($"Request to {nameof(GetAuthor)} which has ID: {id}");
             try
             {
-                var author = await _context.Authors.FindAsync(id);
+                var author = await _context.Authors
+                    .Include(b => b.Books)
+                    .ProjectTo<AuthorDetailsDto>(_mapper.ConfigurationProvider)
+                    .FirstOrDefaultAsync(x => x.Id == id);
 
                 if (author == null)
                 {
                     _logger.LogWarning($"Reacord not found : {nameof(GetAuthor)} - ID: {id}");
                     return NotFound();
                 }
-                var authorDto = _mapper.Map<AuthorReadOnlyDto>(author);
-                return Ok(authorDto);
+                //var authorDto = _mapper.Map<AuthorReadOnlyDto>(author);
+                return Ok(author);
             }
             catch (Exception ex)
             {

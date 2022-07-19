@@ -13,7 +13,8 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Users
         protected LoginUserDto LoginModel = new LoginUserDto();
         protected string message = string.Empty;
 
-        protected NavigationManager NavigationManager;
+        [Inject]
+        protected NavigationManager NavigationManager { get; set; }
 
 
         [Inject]
@@ -26,15 +27,14 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Users
                 var response = await _authService.AuthenticateAsync(LoginModel);
                 if (response)
                 {
-
+                    NavigationManager.NavigateTo("/");
                 }
-                message = "Invalid Credentials, Please Try Again";
             }
             catch (ApiException ex)
             {
-                if (ex.StatusCode >= 200 && ex.StatusCode <= 299)
+                if (ex.StatusCode >= 400 && ex.StatusCode <= 500)
                 {
-                    NavigationManager.NavigateTo("/");
+                    message = "Invalid Credentials, Please Try Again";                    
                 }
                 message = ex.Response;
             }
