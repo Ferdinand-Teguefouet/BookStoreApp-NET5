@@ -1,0 +1,64 @@
+﻿@page "/books/create/"
+@inherits CreateBase
+@attribute [Authorize(Roles = Roles.Administrator)]
+
+<h3>Create Book</h3>
+
+<EditForm Model="Book" OnValidSubmit="HandleBookCreate">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="title">Title</label>
+        <InputText class="form-control" @bind-Value="Book.Title" id="title" />
+        <ValidationMessage For="@(() => Book.Title)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="isbn">ISBN</label>
+        <InputText class="form-control" @bind-Value="Book.Isbn" id="isbn" />
+        <ValidationMessage For="@(() => Book.Isbn)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="price">Price</label>
+        <InputNumber class="form-control" @bind-Value="Book.Price" id="price" />
+        <ValidationMessage For="@(() => Book.Price)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="year">Year</label>
+        <InputNumber class="form-control" @bind-Value="Book.Year" id="year" />
+        <ValidationMessage For="@(() => Book.Year)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="summary">Summary</label>
+        <InputText class="form-control" @bind-Value="Book.Summary" id="summary" />
+        <ValidationMessage For="@(() => Book.Summary)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="">Select the Author</label>
+        <InputSelect class="form-control" @bind-Value="Book.AuthorId" id="author">
+            <option value="">-- Select Author</option>
+            @foreach (var author in Authors)
+            {
+                <option value="@author.Id">@author.FirstName @author.LastName</option>
+            }
+        </InputSelect>
+        <ValidationMessage For="@(() => Book.AuthorId)" />
+    </div>
+    <br />
+    <div class="form-group">
+        <label for="image">Book Cover Photo</label>
+        <InputFile class="form-control" OnChange="HandleFileSelection" id="image" />
+        <img src="@img" width="100" height="100" class="img-thumbnail" />
+        <p class="text-danger">@UpLoadFileWarning</p>
+        <ValidationMessage For="@(() => Book.ImageData)" />
+    </div>
+    <br />
+    <button type="submit" class="btn btn-primary"><span class="oi oi-plus"></span> Create Book</button>
+    <button type="button" @onclick="BackToList" class="btn btn-outline-secondary"><span class="oi oi-media-skip-backward"></span> Back to List</button>
+</EditForm>
+
+

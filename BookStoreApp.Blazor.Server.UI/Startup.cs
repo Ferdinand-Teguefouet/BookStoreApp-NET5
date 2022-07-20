@@ -37,10 +37,10 @@ namespace BookStoreApp.Blazor.Server.UI
             // Add services
             services.AddRazorPages();
             services.AddServerSideBlazor();
-            services.AddBlazoredLocalStorage();
             services.AddSingleton<WeatherForecastService>();
 
             //
+            services.AddBlazoredLocalStorage();
             services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:44396"));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAuthorService, AuthorService>();

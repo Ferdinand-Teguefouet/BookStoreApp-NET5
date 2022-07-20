@@ -1,0 +1,33 @@
+﻿@page "/authors/update/{id:int}"
+@inherits UpdateBase
+@attribute [Authorize(Roles = Roles.Administrator)]
+
+<h3>Adit Author</h3>
+
+<div class="card-body">
+    <EditForm Model="Author" OnValidSubmit="HandleUpdateAuthor">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+        <div class="form-group">
+            <label for="firstname">First Name</label>
+            <InputText class="form-control" @bind-Value="Author.FirstName" id="firstname" />
+            <ValidationMessage For="@(() => Author.FirstName)" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="lastname">Last Name</label>
+            <InputText class="form-control" @bind-Value="Author.LastName" id="lastname" />
+            <ValidationMessage For="@(() => Author.LastName)" />
+        </div>
+        <br />
+        <div class="form-group">
+            <label for="bio">Biography</label>
+            <InputTextArea class="form-control" @bind-Value="Author.Bio" id="bio" />
+            <ValidationMessage For="@(() => Author.Bio)" />
+        </div>
+        <br />
+        <button type="submit" class="btn btn-primary"><span class="oi oi-plus"></span> Update Author</button>
+        <button @onclick="BackToList" class="btn btn-outline-secondary"><span class="oi oi-media-skip-backward"></span> Back to List</button>
+
+    </EditForm>
+</div>
