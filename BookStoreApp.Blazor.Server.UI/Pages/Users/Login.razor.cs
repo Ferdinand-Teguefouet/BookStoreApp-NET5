@@ -22,22 +22,12 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Users
 
         protected async Task HandleLogin()
         {
-            try
+            var response = await _authService.AuthenticateAsync(LoginModel);
+            if (response.Success)
             {
-                var response = await _authService.AuthenticateAsync(LoginModel);
-                if (response)
-                {
-                    NavigationManager.NavigateTo("/");
-                }
+                NavigationManager.NavigateTo("/");
             }
-            catch (ApiException ex)
-            {
-                if (ex.StatusCode >= 400 && ex.StatusCode <= 500)
-                {
-                    message = "Invalid Credentials, Please Try Again";                    
-                }
-                message = ex.Response;
-            }
+            message = response.Message;              
         }
     }
 }

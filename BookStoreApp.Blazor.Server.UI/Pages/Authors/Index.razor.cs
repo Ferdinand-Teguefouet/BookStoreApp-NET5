@@ -1,4 +1,5 @@
-﻿using BookStoreApp.Blazor.Server.UI.Services;
+﻿using BookStoreApp.Blazor.Server.UI.Models;
+using BookStoreApp.Blazor.Server.UI.Services;
 using BookStoreApp.Blazor.Server.UI.Services.Base;
 using Microsoft.AspNetCore.Components;
 using Microsoft.JSInterop;
@@ -11,8 +12,9 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Authors
 {
     public class IndexBase : ComponentBase
     {
-        protected List<AuthorReadOnlyDto> Authors;
-        protected Response<List<AuthorReadOnlyDto>> Response = new Response<List<AuthorReadOnlyDto>> {Success = true };
+        public List<AuthorReadOnlyDto> Authors;
+        public int TotalSize { get; set; }
+        protected Response<AuthorReadOnlyDtoVirtualizeResponse> Response = new Response<AuthorReadOnlyDtoVirtualizeResponse> {Success = true };
 
         [Inject]
         private IAuthorService _authorService { get; set; }
@@ -22,26 +24,18 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Authors
 
         protected override async Task OnInitializedAsync()
         {
-            Response = await _authorService.Get();
+            Response = await _authorService.Get(new QueryParameters {StartIndex = 0});
             if (Response.Success)
             {
-                Authors = Response.Data;
+                Authors = Response.Data.Items.ToList();
             }
         }
 
-        protected async Task Delete(int authorId)
+        protected async Task LoadAuthors(QueryParameters queryParams)
         {
-            var author = Authors.First(x => x.Id == authorId);
-            var confirm = await _jSRuntime.InvokeAsync<bool>("confirm", $"Are You Sure You Want To Delete {author.FirstName} {author.LastName}?");
-            if (confirm)
-            {
-                var response = await _authorService.Delete(authorId);
-                if (response.Success)
-                {
-                    await OnInitializedAsync();
-                }
-            }
-            
+            var virtualizeResult = await _authorService.Get(queryParams);
+            Authors = virtualizeResult.Data.Items.ToList();
+            TotalSize = virtualizeResult.Data.TotalSize;
         }
     }
 }

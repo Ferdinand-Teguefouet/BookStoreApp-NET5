@@ -1,5 +1,6 @@
 using BookStoreApp.Api.Configurations;
 using BookStoreApp.Api.Data;
+using BookStoreApp.Api.Repositories;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -33,6 +34,11 @@ namespace BookStoreApp.Api
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
+            // For the GenericRepository
+            // AddScoped<>() doesn't work with the generic class in .Net 5
+            services.AddTransient(typeof(IAuthorsRepository), typeof(AuthorsRepository));
+            services.AddTransient(typeof(IBooksRepository), typeof(BooksRepository));
+
             //
             var connString = ConfigurationExtensions.GetConnectionString(this.Configuration, "BookStoreAppDbConnection");
             services.AddDbContext<BookStoreDbContext>(options => options.UseSqlServer(connString));

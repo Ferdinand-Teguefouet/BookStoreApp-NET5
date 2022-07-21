@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Blazored.LocalStorage;
+using BookStoreApp.Blazor.Server.UI.Models;
 using BookStoreApp.Blazor.Server.UI.Services.Base;
 using System;
 using System.Collections.Generic;
@@ -19,6 +20,28 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             this._mapper = mapper;
         }
 
+        public async Task<Response<AuthorReadOnlyDtoVirtualizeResponse>> Get(QueryParameters queryParams)
+        {
+            Response<AuthorReadOnlyDtoVirtualizeResponse> response;
+
+            try
+            {
+                await GetBearerToken();
+                var data = await _client.AuthorsGETAsync(queryParams.StartIndex, queryParams.PageSize);
+                response = new Response<AuthorReadOnlyDtoVirtualizeResponse>
+                {
+                    Data = data,
+                    Success = true
+                };
+            }
+            catch (ApiException exception)
+            {
+                response = ConvertApiExceptions<AuthorReadOnlyDtoVirtualizeResponse>(exception);
+            }
+
+            return response;
+        }
+
         public async Task<Response<List<AuthorReadOnlyDto>>> Get()
         {
             Response<List<AuthorReadOnlyDto>> response;
@@ -26,7 +49,7 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             try
             {
                 await GetBearerToken();
-                var data = await _client.AuthorsAllAsync();
+                var data = await _client.GetAllAsync();
                 response = new Response<List<AuthorReadOnlyDto>>
                 {
                     Data = data.ToList(),
@@ -80,7 +103,7 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             try
             {
                 await GetBearerToken();
-                var data = await _client.AuthorsGETAsync(Id);
+                var data = await _client.AuthorsGET2Async(Id);
                 response = new Response<AuthorDetailsDto>
                 {
                     Data = data,
@@ -102,7 +125,7 @@ namespace BookStoreApp.Blazor.Server.UI.Services
             try
             {
                 await GetBearerToken();
-                var data = await _client.AuthorsGETAsync(Id);
+                var data = await _client.AuthorsGET2Async(Id);
                 response = new Response<AuthorUpdateDto>
                 {
                     Data = _mapper.Map< AuthorUpdateDto>(data),

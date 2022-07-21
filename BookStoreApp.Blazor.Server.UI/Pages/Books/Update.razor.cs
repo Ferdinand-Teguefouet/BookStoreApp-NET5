@@ -43,7 +43,7 @@ namespace BookStoreApp.Blazor.Server.UI.Pages.Books
                 Authors = Authorresponse.Data;
             }
         }
-        
+
         protected async Task HandleFileSelection(InputFileChangeEventArgs e)
         {
             var file = e.File;

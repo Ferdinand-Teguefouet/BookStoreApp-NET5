@@ -9,29 +9,42 @@ using System.Threading.Tasks;
 
 namespace BookStoreApp.Blazor.WebAssembly.UI.Services.Authentication
 {
-    public class AuthenticationService : IAuthenticationService
+    public class AuthenticationService : BaseHttpService, IAuthenticationService
     {
         private readonly IClient _httpClient;
         private readonly ILocalStorageService _localStorage;
         private readonly AuthenticationStateProvider _authenticationStateProvider;
         public AuthenticationService(IClient httpClient, ILocalStorageService localStorage, AuthenticationStateProvider authenticationStateProvider)
+           : base(httpClient, localStorage)
         {
             this._httpClient = httpClient;
             this._localStorage = localStorage;
             this._authenticationStateProvider = authenticationStateProvider;
-        }        
+        }
 
-        public async Task<bool> AuthenticateAsync(LoginUserDto loginModel)
+        public async Task<Response<AuthResponse>> AuthenticateAsync(LoginUserDto loginModel)
         {
-            var response = await _httpClient.LoginAsync(loginModel);
+            Response<AuthResponse> response;
+            try
+            {
+                var result = await _httpClient.LoginAsync(loginModel);
+                response = new Response<AuthResponse>
+                {
+                    Data = result,
+                    Success = true
+                };
+                // Store Token
+                await _localStorage.SetItemAsync("accessToken", result.Token);
 
-            // Store Token
-            await _localStorage.SetItemAsStringAsync("accessToken", response.Token);
+                // Change auth state of app
+                await ((ApiAuthenticationStateProvider)_authenticationStateProvider).LoggedIn();
+            }
+            catch (ApiException exception)
+            {
+                response = ConvertApiExceptions<AuthResponse>(exception);
+            }
 
-            // Change auth state of app
-            await ((ApiAuthenticationStateProvider)_authenticationStateProvider).LoggedIn();
-
-            return true;
+            return response;
         }
 
         public async Task Logout()
