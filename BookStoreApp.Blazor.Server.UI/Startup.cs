@@ -41,7 +41,7 @@ namespace BookStoreApp.Blazor.Server.UI
 
             //
             services.AddBlazoredLocalStorage();
-            services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri("https://localhost:44396"));
+            services.AddHttpClient<IClient, Client>(cl => cl.BaseAddress = new Uri(Configuration["BaseAddress"]));
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IAuthorService, AuthorService>();
             services.AddScoped<IBookService, BookService>();

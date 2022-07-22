@@ -25,6 +25,12 @@ namespace BookStoreApp.Blazor.WebAssembly.UI
             var builder = WebAssemblyHostBuilder.CreateDefault(args);
             builder.RootComponents.Add<App>("#app");
 
+            var baseAddress = "https://localhost:44396";
+            if (builder.HostEnvironment.IsProduction())
+            {
+                baseAddress = "https://bookstoreappapi.azurewebsites.net/";
+            }
+
             builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri("https://localhost:44396")});
 
             //

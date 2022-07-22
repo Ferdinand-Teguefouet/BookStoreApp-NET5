@@ -90,6 +90,11 @@ namespace BookStoreApp.Api
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "BookStoreApp.Api v1"));
             }
 
+            if (env.IsProduction())
+            {
+                app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+            }
 
             app.UseHttpsRedirection();
             app.UseStaticFiles();
